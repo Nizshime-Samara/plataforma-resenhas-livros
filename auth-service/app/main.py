@@ -21,7 +21,6 @@ app.add_middleware(
     same_site="none",         
     https_only=True 
 )
-# app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET_KEY)
 
 @app.get("/health")
 def health_check():
