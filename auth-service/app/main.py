@@ -8,7 +8,7 @@ app = FastAPI()
 #CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://172.19.27.43:3000", settings.FRONTEND_URL],
+    allow_origins=["http://172.19.27.43:3000", settings.FRONTEND_URL, "https://nizshime-samara.github.io"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
