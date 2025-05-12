@@ -23,14 +23,13 @@ async def login_via_google(request: Request):
     """
     Inicia o login via Google OAuth, usando session_id vindo da query ou gerando um novo.
     """
-    # ← Usa session_id da URL gerada no frontend ou cria um novo (fallback)
     session_id = request.query_params.get("session_id") or secrets.token_urlsafe(16)
     state = secrets.token_urlsafe(32)
 
     await save_state(session_id, state)
 
     google = get_google_provider()
-    redirect_uri = request.url_for("auth_callback") + f"?session_id={session_id}"
+    redirect_uri = str(request.url_for("auth_callback")) + f"?session_id={session_id}"
     return await google.authorize_redirect(request, redirect_uri, state=state)
 
 @router.get("/callback", name="auth_callback")
