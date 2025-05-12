@@ -9,10 +9,11 @@ const AuthCallback = () => {
     const token = urlParams.get("token");
 
     if (token) {
-      localStorage.setItem("jwt_token", token);
-      navigate("/dashboard");
+      localStorage.setItem("jwt_token", token); 
+      navigate("/dashboard"); 
     } else {
-      navigate("/login");
+      console.warn("❌ Token não encontrado no callback.");
+      navigate("/login"); 
     }
   }, [navigate]);
 
