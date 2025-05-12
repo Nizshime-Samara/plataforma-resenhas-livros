@@ -18,13 +18,13 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 user_repo: IUserRepository = UserRepository()
 
-
 @router.get("/login/google")
 async def login_via_google(request: Request):
     """
-    Inicia o login via Google OAuth, gera estado e armazena temporariamente no Redis.
+    Inicia o login via Google OAuth, usando session_id vindo da query ou gerando um novo.
     """
-    session_id = secrets.token_urlsafe(16)
+    # ← Usa session_id da URL gerada no frontend ou cria um novo (fallback)
+    session_id = request.query_params.get("session_id") or secrets.token_urlsafe(16)
     state = secrets.token_urlsafe(32)
 
     await save_state(session_id, state)
@@ -33,13 +33,12 @@ async def login_via_google(request: Request):
     redirect_uri = request.url_for("auth_callback") + f"?session_id={session_id}"
     return await google.authorize_redirect(request, redirect_uri, state=state)
 
-
 @router.get("/callback", name="auth_callback")
 async def auth_callback(request: Request):
     """
-    Callback OAuth após login com Google. Validando state e redirecionamento com token JWT.
+    Callback OAuth após login com Google. Valida state com Redis e gera JWT.
     """
-    session_id = request.query_params.get("session_id")
+    session_id = request.query_params.get("session_id") or secrets.token_urlsafe(16)
     state_from_google = request.query_params.get("state")
 
     if not session_id or not state_from_google:
@@ -88,14 +87,12 @@ async def auth_callback(request: Request):
     redirect_url = f"{settings.FRONTEND_URL}/auth/callback?token={jwt_token}"
     return RedirectResponse(url=redirect_url)
 
-
 @router.get("/profile")
 async def get_profile(user: dict = Depends(get_current_user)):
     return JSONResponse(content={
         "email": user["email"],
         "name": user["name"]
     })
-
 
 @router.get("/users")
 async def list_users():

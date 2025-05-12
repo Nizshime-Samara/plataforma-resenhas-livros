@@ -13,7 +13,7 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-DEFAULT_TTL = 300  # 5 minutos
+DEFAULT_TTL = 300  # Time to Live de 5 minutos
 
 async def save_state(session_id: str, state: str, ttl: int = DEFAULT_TTL) -> bool:
     """

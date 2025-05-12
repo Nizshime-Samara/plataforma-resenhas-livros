@@ -1,10 +1,14 @@
 import React from "react";
 
 const Login = () => {
-  const backendUrl = 'https://plataforma-resenhas-livros.onrender.com';  // ou process.env.REACT_APP_API_BASE_URL
+  const backendUrl = 'https://plataforma-resenhas-livros.onrender.com';
 
   const handleLogin = () => {
-    window.location.href = `${backendUrl}/api/v1/auth/login/google`;
+    const sessionId = crypto.randomUUID();
+
+    localStorage.setItem("session_id", sessionId);
+
+    window.location.href = `${backendUrl}/api/v1/auth/login/google?session_id=${sessionId}`;
   };
 
   return (
