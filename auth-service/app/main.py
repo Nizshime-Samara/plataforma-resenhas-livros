@@ -8,13 +8,13 @@ app = FastAPI()
 #CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://172.19.27.43:3000"],
+    allow_origins=["http://172.19.27.43:3000", settings.FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 app.add_middleware(SessionMiddleware, secret_key=settings.SESSION_SECRET_KEY)
-app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET_KEY)
+# app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET_KEY)
 
 @app.get("/health")
 def health_check():
