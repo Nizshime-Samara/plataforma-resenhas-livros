@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/plataforma-resenhas-livros/static/css/main.e6c13ad2.css",
-    "main.js": "/plataforma-resenhas-livros/static/js/main.4b3244a5.js",
+    "main.js": "/plataforma-resenhas-livros/static/js/main.bf0d9b67.js",
     "static/js/453.8ab44547.chunk.js": "/plataforma-resenhas-livros/static/js/453.8ab44547.chunk.js",
     "index.html": "/plataforma-resenhas-livros/index.html",
     "main.e6c13ad2.css.map": "/plataforma-resenhas-livros/static/css/main.e6c13ad2.css.map",
-    "main.4b3244a5.js.map": "/plataforma-resenhas-livros/static/js/main.4b3244a5.js.map",
+    "main.bf0d9b67.js.map": "/plataforma-resenhas-livros/static/js/main.bf0d9b67.js.map",
     "453.8ab44547.chunk.js.map": "/plataforma-resenhas-livros/static/js/453.8ab44547.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.4b3244a5.js"
+    "static/js/main.bf0d9b67.js"
   ]
 }
