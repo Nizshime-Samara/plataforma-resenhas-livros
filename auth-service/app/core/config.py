@@ -11,6 +11,8 @@ class Settings:
     JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
     FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
     MONGO_URI = os.getenv("MONGO_URI")
+    UPSTASH_REDIS_REST_URL = os.getenv("UPSTASH_REDIS_REST_URL")
+    UPSTASH_REDIS_REST_TOKEN = os.getenv("UPSTASH_REDIS_REST_TOKEN")
      
 
 settings = Settings()

@@ -35,3 +35,6 @@ uvloop==0.21.0
 watchfiles==1.0.5
 websockets==15.0.1
 email-validator
+redis==5.0.3
+starlette>=0.26.1
+httpx

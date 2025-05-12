@@ -14,11 +14,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 #controle de cookie state do OAuth
 app.add_middleware(
     SessionMiddleware, 
     secret_key=settings.SESSION_SECRET_KEY, 
-    same_site="lax",         
+    same_site="none",         
     https_only=False   
 )
 
