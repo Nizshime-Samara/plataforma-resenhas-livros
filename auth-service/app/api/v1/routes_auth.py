@@ -22,39 +22,27 @@ user_repo: IUserRepository = UserRepository()
 @router.get("/login/google")
 async def login_via_google(request: Request):
     """
-    Inicia o login via Google OAuth, gera um state salvo no Redis.
+    Inicia o login via Google OAuth, usando o state como identificador único salvo no Redis.
     """
-    session_id = secrets.token_urlsafe(16)
-    state = secrets.token_urlsafe(32)
-
-    await save_state(session_id, state)  
+    state = secrets.token_urlsafe(32)  # único identificador
+    await save_state(state, "1")  # salva no Redis para verificação posterior
 
     google = get_google_provider()
-    redirect_uri = str(request.url_for("auth_callback"))
-    redirect_uri += f"?session_id={session_id}"
+    redirect_uri = str(request.url_for("auth_callback"))  # sem query params!
     return await google.authorize_redirect(request, redirect_uri, state=state)
 
 
 @router.get("/callback", name="auth_callback")
 async def auth_callback(request: Request):
     """
-    Callback OAuth do Google. Valida state com Redis via session_id e gera JWT.
+    Callback OAuth do Google. Valida state salvo no Redis e gera JWT.
     """
-    session_id = request.query_params.get("session_id")
-    state_from_google = request.query_params.get("state")
+    state = request.query_params.get("state")
 
-    if not session_id or not state_from_google:
-        return JSONResponse(status_code=400, content={"error": "Missing session_id or state"})
-
-    expected_state = await get_state(session_id)
-
-    if not expected_state:
-        return JSONResponse(status_code=400, content={"error": "Invalid session or expired state"})
-
-    if expected_state != state_from_google:
+    if not state or not await get_state(state):
         return JSONResponse(status_code=400, content={
-            "error": "mismatching_state",
-            "description": "CSRF Warning! State not equal"
+            "error": "invalid_state",
+            "description": "CSRF validation failed or state expired."
         })
 
     google = get_google_provider()
