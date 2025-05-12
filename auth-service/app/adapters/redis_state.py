@@ -13,27 +13,36 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-async def save_state(session_id: str, state: str, ttl: int = 300) -> bool:
+DEFAULT_TTL = 300  # 5 minutos
+
+async def save_state(session_id: str, state: str, ttl: int = DEFAULT_TTL) -> bool:
     """
-    Armazenando o estado no Redis com TTL (uso de time padrão: 5 minutos).
+    Armazena o 'state' da sessão OAuth no Redis com TTL.
     """
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            f"{UPSTASH_REDIS_URL}/set/{session_id}",
-            headers=HEADERS,
-            json={"value": state, "ex": ttl}
-        )
-        return response.status_code == 200
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            response = await client.post(
+                f"{UPSTASH_REDIS_URL}/set/{session_id}",
+                headers=HEADERS,
+                json={"value": state, "ex": ttl}
+            )
+            return response.status_code == 200
+    except httpx.RequestError as e:
+        print(f"❌ Erro ao salvar state no Redis: {e}")
+        return False
 
 async def get_state(session_id: str) -> Optional[str]:
     """
-    Recuperando o estado salvo no Redis via REST API.
+    Recupera o 'state' da sessão salvo no Redis.
     """
-    async with httpx.AsyncClient() as client:
-        response = await client.get(
-            f"{UPSTASH_REDIS_URL}/get/{session_id}",
-            headers=HEADERS
-        )
-        if response.status_code == 200:
-            return response.json().get("result")
-        return None
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            response = await client.get(
+                f"{UPSTASH_REDIS_URL}/get/{session_id}",
+                headers=HEADERS
+            )
+            if response.status_code == 200:
+                return response.json().get("result")
+    except httpx.RequestError as e:
+        print(f"❌ Erro ao recuperar state do Redis: {e}")
+    return None
