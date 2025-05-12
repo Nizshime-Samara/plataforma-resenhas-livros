@@ -24,11 +24,13 @@ async def login_via_google(request: Request):
     """
     Inicia o login via Google OAuth, usando o state como identificador único salvo no Redis.
     """
-    state = secrets.token_urlsafe(32)  # único identificador
-    await save_state(state, "1")  # salva no Redis para verificação posterior
+    state = secrets.token_urlsafe(32)
+    redis_key = f"oauth_state:{state}"
+    await save_state(redis_key, "1")
+    logger.info(f"🔐 Salvando state no Redis com chave {redis_key}")
 
     google = get_google_provider()
-    redirect_uri = str(request.url_for("auth_callback"))  # sem query params!
+    redirect_uri = str(request.url_for("auth_callback"))
     return await google.authorize_redirect(request, redirect_uri, state=state)
 
 
@@ -38,8 +40,11 @@ async def auth_callback(request: Request):
     Callback OAuth do Google. Valida state salvo no Redis e gera JWT.
     """
     state = request.query_params.get("state")
+    redis_key = f"oauth_state:{state}"
+    logger.info(f"↩️ Callback recebido com state={state}")
 
-    if not state or not await get_state(state):
+    if not state or not await get_state(redis_key):
+        logger.warning("⚠️ State inválido ou expirado no Redis.")
         return JSONResponse(status_code=400, content={
             "error": "invalid_state",
             "description": "CSRF validation failed or state expired."
