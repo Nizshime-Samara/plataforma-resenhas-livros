@@ -47,7 +47,7 @@ Este projeto tem como objetivo construir uma plataforma full stack moderna para 
 
 ---
 
-## 📂 Estrutura do Projeto
+## 📂 [Geral] Estrutura do Projeto
 ```
 plataforma-resenhas-livros/
 ├── auth-service/ # Serviço de autenticação (FastAPI + OAuth2)
@@ -56,6 +56,91 @@ plataforma-resenhas-livros/
 ├── frontend/ # Aplicação React SPA
 ├── .github/workflows/ # CI/CD com GitHub Actions
 └── docker-compose.yml # Infraestrutura local (MongoDB, serviços, rede)
+
+```
+---
+# [Detalhamento] Estrutura de pastas monorepo do projeto
+```
+plataforma-resenhas-livros/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── docker-compose.yml             # Orquestração local (MongoDB + serviços)
+├── .github/
+│   └── workflows/                 # CI/CD GitHub Actions
+│       ├── auth-service.yml
+│       ├── book-service.yml
+│       ├── review-service.yml
+│       └── frontend.yml
+│
+├── services/
+│   ├── auth-service/             # FastAPI + OAuth2 + JWT
+│   │   └── app/
+│   │       ├── api/
+│   │       ├── domain/
+│   │       ├── usecases/
+│   │       ├── adapters/
+│   │       └── core/
+│   │   ├── tests/
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   ├── main.py
+│   │   └── .env.example
+│   │
+│   ├── book-service/             # Spring Boot (livros)
+│   │   └── src/
+│   │       └── main/
+│   │           └── java/
+│   │               └── com/plataforma/livros/...
+│   │   ├── Dockerfile
+│   │   ├── pom.xml
+│   │   └── .env.example
+│   │
+│   ├── review-service/           # FastAPI (avaliações)
+│   │   └── estrutura similar ao auth-service
+│
+├── frontend/                     # React SPA
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   └── services/
+│   ├── .env.example
+│   ├── Dockerfile
+│   ├── package.json
+│   └── README.md
+```
+---
+# auth-service - <FastAPI + OAuth2 + JWT>
+```
+auth-service/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── api/
+│   │   └── v1/
+│   │       ├── __init__.py
+│   │       └── routes_auth.py
+│   ├── domain/
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── usecases/
+│   │   ├── __init__.py
+│   │   └── auth_usecase.py
+│   ├── adapters/
+│   │   ├── __init__.py
+│   │   ├── google_oauth.py
+│   │   ├── jwt_service.py
+│   │   └── user_repository.py
+│   └── core/
+│       ├── __init__.py
+│       ├── config.py
+│       └── security.py
+├── requirements.txt
+├── Dockerfile
+├── .env.example
+└── tests/
+    └── test_auth.py
 
 ```
 ---
