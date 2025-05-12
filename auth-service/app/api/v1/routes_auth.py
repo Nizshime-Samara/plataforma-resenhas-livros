@@ -27,7 +27,6 @@ async def login_via_google(request: Request):
 @router.get("/callback", name="auth_callback")
 async def auth_callback(request: Request):
     google = get_google_provider()
-    google = get_google_provider()
 
     try:
         token = await google.authorize_access_token(request)
