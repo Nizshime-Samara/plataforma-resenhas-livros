@@ -5,6 +5,7 @@ from app.api.v1.routes_auth import router as auth_router
 from app.core.config import settings
 
 app = FastAPI()
+
 #CORS
 app.add_middleware(
     CORSMiddleware,
@@ -13,7 +14,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(SessionMiddleware, secret_key=settings.SESSION_SECRET_KEY)
+#controle de cookie state do OAuth
+app.add_middleware(
+    SessionMiddleware, 
+    secret_key=settings.SESSION_SECRET_KEY, 
+    same_site="none",         
+    https_only=True 
+)
 # app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET_KEY)
 
 @app.get("/health")
