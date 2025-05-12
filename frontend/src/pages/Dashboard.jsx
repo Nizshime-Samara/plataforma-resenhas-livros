@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState(null)
 
   useEffect(() => {
     const savedToken = localStorage.getItem("jwt_token");
