@@ -26,11 +26,16 @@ async def login_via_google(request: Request):
     """
     state = secrets.token_urlsafe(32)
     redis_key = f"oauth_state:{state}"
-    await save_state(redis_key, "1")
-    logger.info(f"🔐 Salvando state no Redis com chave {redis_key}")
+    logger.info(f"🔐 Gerando state e salvando no Redis: {redis_key}")
+
+    success = await save_state(redis_key, "1")
+    if not success:
+        logger.error("❌ Falha ao salvar o state no Redis.")
+        return JSONResponse(status_code=500, content={"error": "redis_error", "description": "Erro ao salvar state no Redis."})
 
     google = get_google_provider()
     redirect_uri = str(request.url_for("auth_callback"))
+    logger.info(f"➡️ Redirecionando para OAuth com redirect_uri={redirect_uri}")
     return await google.authorize_redirect(request, redirect_uri, state=state)
 
 
@@ -43,7 +48,15 @@ async def auth_callback(request: Request):
     redis_key = f"oauth_state:{state}"
     logger.info(f"↩️ Callback recebido com state={state}")
 
-    if not state or not await get_state(redis_key):
+    if not state:
+        logger.warning("⚠️ State ausente na callback.")
+        return JSONResponse(status_code=400, content={
+            "error": "missing_state",
+            "description": "State não informado na URL."
+        })
+
+    redis_state = await get_state(redis_key)
+    if not redis_state:
         logger.warning("⚠️ State inválido ou expirado no Redis.")
         return JSONResponse(status_code=400, content={
             "error": "invalid_state",
@@ -80,6 +93,7 @@ async def auth_callback(request: Request):
         "name": user.name
     })
     redirect_url = f"{settings.FRONTEND_URL}/auth/callback?token={jwt_token}"
+    logger.info(f"🎯 Redirecionando para front com token: {redirect_url}")
     return RedirectResponse(url=redirect_url)
 
 
