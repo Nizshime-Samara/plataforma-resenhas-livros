@@ -5,11 +5,12 @@ import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
-    <BrowserRouter  basename="/plataforma-resenhas-livros">
+    <BrowserRouter basename="/plataforma-resenhas-livros">
       <Routes>
-        <Route path="/auth/callback" element={<AuthCallback />} />        
+        <Route path="/" element={<Login />} /> {/* 👈 ADICIONADO */}
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />        
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<p>Página não encontrada</p>} />
       </Routes>
     </BrowserRouter>
