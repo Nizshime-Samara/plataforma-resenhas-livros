@@ -21,37 +21,26 @@ user_repo: IUserRepository = UserRepository()
 @router.get("/login/google")
 async def login_via_google(request: Request):
     """
-    Inicia o login via Google OAuth, usando session_id vindo da query ou gerando um novo.
+    Inicia o login via Google OAuth, gera um state salvo no Redis.
     """
-    session_id = request.query_params.get("session_id") or secrets.token_urlsafe(16)
     state = secrets.token_urlsafe(32)
-
-    await save_state(session_id, state)
+    await save_state(state, "1")  # valor fictício, usado apenas para validação CSRF
 
     google = get_google_provider()
-    redirect_uri = str(request.url_for("auth_callback")) + f"?session_id={session_id}"
+    redirect_uri = str(request.url_for("auth_callback"))
     return await google.authorize_redirect(request, redirect_uri, state=state)
 
 @router.get("/callback", name="auth_callback")
 async def auth_callback(request: Request):
     """
-    Callback OAuth após login com Google. Valida state com Redis e gera JWT.
+    Callback OAuth após login com Google. Valida o state salvo no Redis e gera JWT.
     """
-    session_id = request.query_params.get("session_id") or secrets.token_urlsafe(16)
     state_from_google = request.query_params.get("state")
 
-    if not session_id or not state_from_google:
-        return JSONResponse(status_code=400, content={"error": "Missing session_id or state"})
-
-    expected_state = await get_state(session_id)
-
-    if not expected_state:
-        return JSONResponse(status_code=400, content={"error": "Invalid session or expired state"})
-
-    if expected_state != state_from_google:
+    if not state_from_google or not await get_state(state_from_google):
         return JSONResponse(status_code=400, content={
-            "error": "mismatching_state",
-            "description": "CSRF Warning! State not equal"
+            "error": "invalid_state",
+            "description": "CSRF validation failed or state expired."
         })
 
     google = get_google_provider()
