@@ -22,7 +22,7 @@ user_repo: IUserRepository = UserRepository()
 @router.get("/login/google")
 async def login_via_google(request: Request):
     """
-    Inicia o login via Google OAuth, usando o state como identificador único salvo no Redis.
+    Inicia o login via Google OAuth, usando 'state' como token único salvo no Redis.
     """
     state = secrets.token_urlsafe(32)
     redis_key = f"oauth_state:{state}"
@@ -42,7 +42,7 @@ async def login_via_google(request: Request):
 @router.get("/callback", name="auth_callback")
 async def auth_callback(request: Request):
     """
-    Callback OAuth do Google. Valida state salvo no Redis e gera JWT.
+    Callback do Google OAuth. Valida o state com o Redis e emite JWT.
     """
     state = request.query_params.get("state")
     redis_key = f"oauth_state:{state}"
@@ -92,6 +92,7 @@ async def auth_callback(request: Request):
         "sub": user.email,
         "name": user.name
     })
+
     redirect_url = f"{settings.FRONTEND_URL}/auth/callback?token={jwt_token}"
     logger.info(f"🎯 Redirecionando para front com token: {redirect_url}")
     return RedirectResponse(url=redirect_url)
