@@ -1,7 +1,7 @@
 {
-  "name": "plataforma-resenhas-livros-ts",
+  "name": "plataforma-resenhas-livros",
   "version": "0.1.0",
-  "homepage": "https://Nizshime-Samara.github.io/plataforma-resenhas-livros-ts",
+  "homepage": "https://Nizshime-Samara.github.io/plataforma-resenhas-livros",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",

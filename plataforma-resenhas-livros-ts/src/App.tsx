@@ -5,22 +5,16 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import AuthCallBack from './pages/AuthCallBack';
+import AuthCallback from './pages/AuthCallBack';
 
 
 const App: React.FC = () => (
-  <BrowserRouter>
     <Routes>
-      {/* redireciona “/” → “/login” */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
-
+      <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/auth/callback" element={<AuthCallBack />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/dashboard" element={<Dashboard />} />
-
-      {/* rota coringa para 404 simples */}
-      <Route path="*" element={<p>Página não encontrada</p>} />
     </Routes>
-  </BrowserRouter>
 );
 export default App;
 
