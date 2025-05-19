@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/plataforma-resenhas-livros-ts/static/css/main.f855e6bc.css",
-    "main.js": "/plataforma-resenhas-livros-ts/static/js/main.1856edfb.js",
-    "static/js/453.0bf610c7.chunk.js": "/plataforma-resenhas-livros-ts/static/js/453.0bf610c7.chunk.js",
-    "index.html": "/plataforma-resenhas-livros-ts/index.html",
-    "main.f855e6bc.css.map": "/plataforma-resenhas-livros-ts/static/css/main.f855e6bc.css.map",
-    "main.1856edfb.js.map": "/plataforma-resenhas-livros-ts/static/js/main.1856edfb.js.map",
-    "453.0bf610c7.chunk.js.map": "/plataforma-resenhas-livros-ts/static/js/453.0bf610c7.chunk.js.map"
+    "main.css": "/plataforma-resenhas-livros/static/css/main.f855e6bc.css",
+    "main.js": "/plataforma-resenhas-livros/static/js/main.0adc8271.js",
+    "static/js/453.be8c69b4.chunk.js": "/plataforma-resenhas-livros/static/js/453.be8c69b4.chunk.js",
+    "index.html": "/plataforma-resenhas-livros/index.html",
+    "main.f855e6bc.css.map": "/plataforma-resenhas-livros/static/css/main.f855e6bc.css.map",
+    "main.0adc8271.js.map": "/plataforma-resenhas-livros/static/js/main.0adc8271.js.map",
+    "453.be8c69b4.chunk.js.map": "/plataforma-resenhas-livros/static/js/453.be8c69b4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.1856edfb.js"
+    "static/js/main.0adc8271.js"
   ]
 }
