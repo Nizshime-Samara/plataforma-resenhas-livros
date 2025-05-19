@@ -20,7 +20,7 @@ app.add_middleware(
     SessionMiddleware, 
     secret_key=settings.SESSION_SECRET_KEY, 
     same_site="none",         
-    https_only=False   
+    https_only=True   
 )
 
 @app.get("/health")
